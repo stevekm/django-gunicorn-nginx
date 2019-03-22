@@ -5,3 +5,4 @@ logs/*
 *.log
 static
 nginx/myapp.conf
+nginx/logs/nginx.pid
