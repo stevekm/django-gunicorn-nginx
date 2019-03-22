@@ -38,3 +38,116 @@ Stop the web server and app server:
 ```
 make stop
 ```
+
+# Django
+
+Django is a web app framework for Python. It allows you to leverage Python and its libraries in your web applications, such as `pandas`, `numpy`, etc.. Django also has a great database ORM, letting you interface with databases such as SQLite and PostgreSQL as Python objects, without having to write SQL commands and queries. On top of all this, it provides a free 'admin panel' out of the box, where you can add, edit, update, and delete entries from your databases via a web interface. Django is well-established, has great community support, and offers a variety of add-ons for added functionality. 
+
+## Resources
+
+- offical website: https://www.djangoproject.com/
+
+- documentation & official tutorials: https://docs.djangoproject.com/en/2.1/ 
+
+- Django Girls tutorial: https://tutorial.djangogirls.org/en/
+
+- deployment checklist: https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+
+# Gunicorn
+
+While Django includes a basic web server (`python manage.py runserver`), it is not appropriate for user-facing or production usage; instead you should use a WSGI server. Gunicorn is one such server, and is easy to configure for usage with Django. This replaces the Django built-in web server when you want to deploy your app "for real". 
+
+## Resources
+
+- Gunicorn homepage: https://gunicorn.org/
+
+- Django & WSGI: https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
+
+- Django & Gunicorn: https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/gunicorn/
+
+- Gunicorn deployment: https://docs.gunicorn.org/en/latest/deploy.html
+
+- "Run a Django app with Gunicorn": [Part 1](http://rahmonov.me/posts/run-a-django-app-with-gunicorn-in-ubuntu-16-04/), [Part 2](http://rahmonov.me/posts/run-a-django-app-with-nginx-and-gunicorn/)
+
+- "Deploying Django with nginx and gunicorn": http://honza.ca/2011/05/deploying-django-with-nginx-and-gunicorn
+
+- Gunicorn sample config file: https://github.com/benoitc/gunicorn/blob/cc8e67ea83ce1064ef605d82130ace2a3670d68a/examples/example_config.py
+
+# nginx
+
+nginx is a standard web server, widely used to serve websites and web apps. It does not natively serve Python apps, but offers advantages over using the Python WSGI serve alone. Additionally, it serves the static files for your app (images, .css files, etc.), which are not typically handled by the WSGI server. It can also act as a reverse proxy, directing the incoming network traffic to your web app's WSGI server and can act as a buffer against the WSGI server. 
+
+## Notes
+
+Typically, nginx lives in your server and is managed independently of your web apps. In this example repo, nginx is installed via conda, and includes items at these locations:
+
+```
+conda/bin/nginx
+conda/etc/nginx
+conda/var/log/nginx
+conda/var/tmp/nginx
+```
+
+nginx expects to find specific files in specific locations on the system, relative to a "prefix" location, which defaults to the standard install location. For the purpose of this demonstration, the "prefix" is provided to nginx as `${PWD}/nginx/`, or the `nginx/` directory included here. Based on this prefix, the following included locations are required for nginx to function:
+
+```
+nginx/var/log/nginx
+nginx/var/run/nginx
+nginx/var/tmp/nginx
+```
+
+Additionally, we are using a custom config file, `nginx.conf`; using the "prefix" configuration, it corresponds to this file:
+
+```
+nginx/nginx.conf
+```
+
+This file "includes" configs from adjacent files, `nginx/myapp.conf` and `nginx/default-site.conf`. A default site for nginx has been included to help determine that nginx is running correctly, located at `http://127.0.0.1:8079/`.
+
+In order to communicate between nginx and Gunicorn, we are using a Unix socket, created at `${PWD}/django.sock`. This allows communication between processes on the same system; in Gunicorn and nginx were running on different computers, we would use a network address here instead. 
+
+## Resources
+
+- Beginner's guide: http://nginx.org/en/docs/beginners_guide.html
+
+- home page: https://nginx.org/en/
+
+- Core functionality and configuration descriptions: http://nginx.org/en/docs/ngx_core_module.html
+
+- Logging configuration: https://docs.nginx.com/nginx/admin-guide/monitoring/logging/
+
+- Pitfalls and Common Mistakes: https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/
+
+- config mangement: https://tylergaw.com/articles/how-i-manage-nginx-config/
+
+- Config example: https://www.nginx.com/resources/wiki/start/topics/examples/full/
+
+# conda
+
+conda is a package manager, which allows for the scripted installation of version-controlled software and libraries. conda allows us to install all the software needed for this demo without requiring admin-rights to the computer or server. 
+
+conda was originally developed for Python library management but has expanded to include a wide range of software. 
+
+conda is often downloaded via the Anaconda and Miniconda distributions. Anaconda is a package that includes conda + a large number of optional Python libraries, whereas Miniconda is a bare-bones installation of conda + essential Python libraries. Miniconda is used in this demonstration. Both Anaconda and Miniconda come in '2' and '3' variants, which correspond to the base versions of Python they include (Python 2 and Python 3, respectively).
+
+## Resources
+
+- home page: https://conda.io/en/latest/
+
+- Miniconda archive: https://repo.anaconda.com/miniconda/
+
+# Software
+
+Software used in this demonstration:
+
+- Python 3.6
+
+- Django 2.2.1
+
+- Gunicorn 19.9.0
+
+- nginx 1.15.5
+
+- conda (Miniconda 3) 4.5.4
+
+This demonstration was designed on macOS 10.12.6 Sierra, and should work on most macOS and Linux operating systems. 
