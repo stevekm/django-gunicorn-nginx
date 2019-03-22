@@ -35,15 +35,48 @@ conda-install: conda
 # 	django-admin startproject webapp .
 # 	python manage.py startapp helloworld
 
+django: django-init django-import django-collectstatic
+
 # setup the app for the first time
 django-init:
 	python manage.py makemigrations
 	python manage.py migrate
 	python manage.py createsuperuser
 
+# import items to the database
 django-import:
 	python db_import.py
+
+# copy static files over for web hosting
+django-collectstatic:
+	python manage.py collectstatic
 
 # run the Django dev server
 django-runserver:
 	python manage.py runserver
+
+# ~~~~~~ setup Gunicorn WSGI server ~~~~~ #
+SOCKET:=unix:$(CURDIR)/django.sock
+GUNICORN_CONFIG:=conf/gunicorn_config.py
+GUNICORN_PIDFILE:=$(LOG_DIR)/gunicorn.pid
+GUNICORN_ACCESS_LOG:=$(LOG_DIR)/gunicorn.access.log
+GUNICORN_ERROR_LOG:=$(LOG_DIR)/gunicorn.error.log
+GUNICORN_LOG:=$(LOG_DIR)/gunicorn.log
+GUNICORN_PID:=
+gunicorn-start:
+	gunicorn webapp.wsgi \
+	--bind "$(SOCKET)" \
+	--config "$(GUNICORN_CONFIG)" \
+	--pid "$(GUNICORN_PIDFILE)" \
+	--access-logfile "$(GUNICORN_ACCESS_LOG)" \
+	--error-logfile "$(GUNICORN_ERROR_LOG)" \
+	--log-file "$(GUNICORN_LOG)" \
+	--name "$(GUNICORN_NAME)" \
+	--daemon
+
+gunicorn-check:
+	ps -ax | grep gunicorn
+
+gunicorn-kill: GUNICORN_PID=$(shell head -1 $(GUNICORN_PIDFILE))
+gunicorn-kill: $(GUNICORN_PIDFILE)
+	kill "$(GUNICORN_PID)"
