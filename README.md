@@ -150,6 +150,10 @@ conda is often downloaded via the Anaconda and Miniconda distributions. Anaconda
 
 - Miniconda archive: https://repo.anaconda.com/miniconda/
 
+# make
+
+This demonstration uses a Makefile to wrap up all the commands to be run (see the file `Makefile`). Makefiles consist of "targets" and "recipes", where the recipe is a list of commands used to create the target item. Targets can have dependencies on other targets, and Makefiles can include variables that can be exported into the shell environment of the commands run in  recipes. In this case, the targets are easy names to describe the actions we are taking. You can read the Makefile to see the full list of commands being used throughout the demo. 
+
 # Software
 
 Software used in this demonstration:
@@ -163,5 +167,7 @@ Software used in this demonstration:
 - nginx 1.15.5
 
 - conda (Miniconda 3) 4.5.4
+
+- GNU Make 3.81
 
 This demonstration was designed on macOS 10.12.6 Sierra, and should work on most macOS and Linux operating systems.
