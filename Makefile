@@ -2,7 +2,7 @@ SHELL:=/bin/bash
 UNAME:=$(shell uname)
 export LOG_DIR:=logs
 
-install: conda-install django $(NEW_CONF)
+install: conda-install django conf-setup
 
 start: gunicorn-start
 	sleep 1
@@ -97,6 +97,7 @@ NGINX_CONF:=nginx.conf
 # need to edit the myapp.conf file
 OLD_CONF:=nginx/myapp.conf.og
 NEW_CONF:=nginx/myapp.conf
+conf-setup: $(NEW_CONF)
 $(NEW_CONF):
 	cat "$(OLD_CONF)" | \
 	sed 's|unix:/usr/local/bin/apps/myapp/myapp.sock|$(SOCKET)|' | \
