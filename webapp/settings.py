@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_DIR = os.path.realpath(os.environ.get('LOG_DIR', 'logs'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,9 +26,47 @@ SECRET_KEY = '18c6tw_2$ue%9pon4_1+5sri++s^s$d_8ldvnlk1a@!nx7i1y5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# https://docs.djangoproject.com/en/2.1/ref/settings/#allowed-hosts
+# change this for production deployment
+ALLOWED_HOSTS = ['*']
 
+# save process ID to file
+PID_FILE = os.path.join(LOG_DIR, 'django.pid')
+PID = os.getpid()
+with open(PID_FILE, "w") as f:
+    f.write(str(PID) + '\n')
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+        'formatters': {
+            'custom': {
+                'datefmt' : '%Y-%m-%d %H:%M:%S',
+                'format': '[%(asctime)s] %(levelname)s (%(name)s:%(module)s:%(funcName)s:%(lineno)d) %(message)s'
+            },
+        },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'django.log'),
+            'formatter': 'custom',
+        },
+        'console_custom' : {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'custom',
+        },
+    },
+    'loggers': {
+        '' : { # catch-all logger
+            'handlers': ['file', 'console_custom'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'helloworld'
 ]
 
 MIDDLEWARE = [

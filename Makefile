@@ -1,5 +1,6 @@
 SHELL:=/bin/bash
 UNAME:=$(shell uname)
+export LOG_DIR:=logs
 
 # ~~~~~ Setup Conda ~~~~~ #
 PATH:=$(CURDIR)/conda/bin:$(PATH)
@@ -30,6 +31,19 @@ conda-install: conda
 
 # ~~~~~ SETUP DJANGO APP ~~~~~ #
 # create the app for development; only need to run this when first creating repo
-# start-django:
+# django-start:
 # 	django-admin startproject webapp .
 # 	python manage.py startapp helloworld
+
+# setup the app for the first time
+django-init:
+	python manage.py makemigrations
+	python manage.py migrate
+	python manage.py createsuperuser
+
+django-import:
+	python db_import.py
+
+# run the Django dev server
+django-runserver:
+	python manage.py runserver
