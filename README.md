@@ -33,6 +33,10 @@ make start
 
 <img width="830" alt="Screen Shot 2019-03-22 at 12 49 06 PM" src="https://user-images.githubusercontent.com/10505524/54839288-ef9c7f80-4ca0-11e9-92ae-fe51461e5977.png">
 
+<img width="830" alt="Screen Shot 2019-03-22 at 12 53 06 PM" src="https://user-images.githubusercontent.com/10505524/54839568-810bf180-4ca1-11e9-93e1-fc65b548af20.png">
+
+<img width="830" alt="Screen Shot 2019-03-22 at 12 53 10 PM" src="https://user-images.githubusercontent.com/10505524/54839582-8cf7b380-4ca1-11e9-8040-b3b85ff3dddb.png">
+
 Stop the web server and app server:
 
 ```
