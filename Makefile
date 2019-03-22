@@ -80,3 +80,29 @@ gunicorn-check:
 gunicorn-kill: GUNICORN_PID=$(shell head -1 $(GUNICORN_PIDFILE))
 gunicorn-kill: $(GUNICORN_PIDFILE)
 	kill "$(GUNICORN_PID)"
+
+
+# ~~~~~ set nginx web sever ~~~~~ #
+NGINX_PREFIX:=$(CURDIR)/nginx
+NGINX_CONF:=nginx.conf
+
+# need to edit the myapp.conf file
+OLD_CONF:=nginx/myapp.conf.og
+NEW_CONF:=nginx/myapp.conf
+$(NEW_CONF):
+	cat "$(OLD_CONF)" | sed 's|unix:/usr/local/bin/apps/myapp/myapp.sock|$(SOCKET)|' > "$(NEW_CONF)"
+
+nginx-start:
+	nginx -p "$(NGINX_PREFIX)" -c "$(NGINX_CONF)"
+
+nginx-stop:
+	nginx -p "$(NGINX_PREFIX)" -c "$(NGINX_CONF)" -s quit
+
+nginx-reload:
+	nginx -p "$(NGINX_PREFIX)" -c "$(NGINX_CONF)" -s reload
+
+nginx-test:
+	nginx -p "$(NGINX_PREFIX)"  -c "$(NGINX_CONF)" -t
+
+nginx-check:
+	ps -ax | grep nginx

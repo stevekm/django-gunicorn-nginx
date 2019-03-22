@@ -2,3 +2,4 @@ conda
 *.pyc
 db.sqlite3
 logs/*
+*.log

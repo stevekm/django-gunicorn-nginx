@@ -1,0 +1,23 @@
+server {
+    # http://nginx.org/en/docs/http/ngx_http_log_module.html#access_log
+    access_log logs/myapp/access.log combined;
+    add_header Cache-Control no-cache;
+
+    server_name  localhost;
+    listen       8080;
+
+    # ignore favion messages
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    # path to socket for gunicorn
+    location / {
+        proxy_pass http://unix:/usr/local/bin/apps/myapp/myapp.sock;
+    }
+
+    # location for static files to serve; mostly the admin panel CSS files
+    location /static/ {
+        expires -1;
+        root /usr/local/bin/apps/myapp/;
+    }
+
+}
