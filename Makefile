@@ -2,6 +2,14 @@ SHELL:=/bin/bash
 UNAME:=$(shell uname)
 export LOG_DIR:=logs
 
+install: conda-install django
+
+start: gunicorn-start
+	sleep 1
+	$(MAKE) nginx-start
+
+stop: gunicorn-kill nginx-stop
+
 # ~~~~~ Setup Conda ~~~~~ #
 PATH:=$(CURDIR)/conda/bin:$(PATH)
 unexport PYTHONPATH
@@ -56,7 +64,8 @@ django-runserver:
 	python manage.py runserver
 
 # ~~~~~~ setup Gunicorn WSGI server ~~~~~ #
-SOCKET:=unix:$(CURDIR)/django.sock
+SOCKET_FILE:=$(CURDIR)/django.sock
+SOCKET:=unix:$(SOCKET_FILE)
 GUNICORN_CONFIG:=conf/gunicorn_config.py
 GUNICORN_PIDFILE:=$(LOG_DIR)/gunicorn.pid
 GUNICORN_ACCESS_LOG:=$(LOG_DIR)/gunicorn.access.log
@@ -71,7 +80,6 @@ gunicorn-start:
 	--access-logfile "$(GUNICORN_ACCESS_LOG)" \
 	--error-logfile "$(GUNICORN_ERROR_LOG)" \
 	--log-file "$(GUNICORN_LOG)" \
-	--name "$(GUNICORN_NAME)" \
 	--daemon
 
 gunicorn-check:
@@ -90,9 +98,11 @@ NGINX_CONF:=nginx.conf
 OLD_CONF:=nginx/myapp.conf.og
 NEW_CONF:=nginx/myapp.conf
 $(NEW_CONF):
-	cat "$(OLD_CONF)" | sed 's|unix:/usr/local/bin/apps/myapp/myapp.sock|$(SOCKET)|' > "$(NEW_CONF)"
+	cat "$(OLD_CONF)" | \
+	sed 's|unix:/usr/local/bin/apps/myapp/myapp.sock|$(SOCKET)|' | \
+	sed 's|/usr/local/bin/apps/myapp/|$(CURDIR)|' > "$(NEW_CONF)"
 
-nginx-start:
+nginx-start: $(NEW_CONF) $(SOCKET_FILE)
 	nginx -p "$(NGINX_PREFIX)" -c "$(NGINX_CONF)"
 
 nginx-stop:
