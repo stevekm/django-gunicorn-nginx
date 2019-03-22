@@ -13,6 +13,6 @@ def index(request):
     """
     logger.info("getting all the fruits")
     all_fruits = Fruit.objects.all()
-    all_fruits_str = "Found these fruits: "+ " ".join([ x.type for x in all_fruits ])
+    all_fruits_str = "This is the Django app. Found these fruits in the database: "+ " ".join([ x.type for x in all_fruits ])
     logger.info("returning all the fruits")
     return HttpResponse(all_fruits_str)

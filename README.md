@@ -31,7 +31,7 @@ make start
 
 - the Django website should be accessible at `http://127.0.0.1:8080/`, with the Django admin panel at `http://127.0.0.1:8080/admin/`
 
-<img width="830" alt="Screen Shot 2019-03-21 at 11 53 11 PM" src="https://user-images.githubusercontent.com/10505524/54799663-926ae480-4c34-11e9-9622-ebe3aad32864.png">
+<img width="830" alt="Screen Shot 2019-03-22 at 12 49 06 PM" src="https://user-images.githubusercontent.com/10505524/54839288-ef9c7f80-4ca0-11e9-92ae-fe51461e5977.png">
 
 Stop the web server and app server:
 
@@ -41,13 +41,23 @@ make stop
 
 # Django
 
-Django is a web app framework for Python. It allows you to leverage Python and its libraries in your web applications, such as `pandas`, `numpy`, etc.. Django also has a great database ORM, letting you interface with databases such as SQLite and PostgreSQL as Python objects, without having to write SQL commands and queries. On top of all this, it provides a free 'admin panel' out of the box, where you can add, edit, update, and delete entries from your databases via a web interface. Django is well-established, has great community support, and offers a variety of add-ons for added functionality. 
+Django is a web app framework for Python. It allows you to leverage Python and its libraries in your web applications, such as `pandas`, `numpy`, etc.. Django also has a great database ORM, letting you interface with databases such as SQLite and PostgreSQL as Python objects, without having to write SQL commands and queries. On top of all this, it provides a free 'admin panel' out of the box, where you can add, edit, update, and delete entries from your databases via a web interface. Django is well-established, has great community support, and offers a variety of add-ons for added functionality.
+
+## Notes
+
+The included demo Django app includes two parts: `webapp` and `helloworld`. `webapp` is the parent Django "project" that controls the entire app, and `helloworld` is a modular app that is managed by the project. `webapp` includes the settings and URL configurations that determine how everything functions (`webapp/settings.py`, `webapp/urls.py`). Notably, an example has been included on how to set up some customized logging behavior that can be used throughout the apps.
+
+`helloworld` is a basic app that includes a database model for recording the names of some fruits (`helloworld/models.py`). The default configuration uses a SQLite database to store this information. This app contains a single web "view", which returns a message describing the fruits that are in the app database (`helloworld/views.py`).
+
+An additional script has been included, `db_import.py`, which imports some fruits into the app database for you. This shows how you can initialize your Django app and interact with it via scripts and other programs.
 
 ## Resources
 
 - offical website: https://www.djangoproject.com/
 
-- documentation & official tutorials: https://docs.djangoproject.com/en/2.1/ 
+- documentation: https://docs.djangoproject.com/en/2.1/
+
+- official tutorial: https://docs.djangoproject.com/en/2.1/intro/tutorial01/
 
 - Django Girls tutorial: https://tutorial.djangogirls.org/en/
 
@@ -55,7 +65,7 @@ Django is a web app framework for Python. It allows you to leverage Python and i
 
 # Gunicorn
 
-While Django includes a basic web server (`python manage.py runserver`), it is not appropriate for user-facing or production usage; instead you should use a WSGI server. Gunicorn is one such server, and is easy to configure for usage with Django. This replaces the Django built-in web server when you want to deploy your app "for real". 
+While Django includes a basic web server (`python manage.py runserver`), it is not appropriate for user-facing or production usage; instead you should use a WSGI server. Gunicorn is one such server, and is easy to configure for usage with Django. This replaces the Django built-in web server when you want to deploy your app "for real".
 
 ## Resources
 
@@ -75,7 +85,7 @@ While Django includes a basic web server (`python manage.py runserver`), it is n
 
 # nginx
 
-nginx is a standard web server, widely used to serve websites and web apps. It does not natively serve Python apps, but offers advantages over using the Python WSGI serve alone. Additionally, it serves the static files for your app (images, .css files, etc.), which are not typically handled by the WSGI server. It can also act as a reverse proxy, directing the incoming network traffic to your web app's WSGI server and can act as a buffer against the WSGI server. 
+nginx is a standard web server, widely used to serve websites and web apps. It does not natively serve Python apps, but offers advantages over using the Python WSGI serve alone. Additionally, it serves the static files for your app (images, .css files, etc.), which are not typically handled by the WSGI server. It can also act as a reverse proxy, directing the incoming network traffic to your web app's WSGI server and can act as a buffer against the WSGI server.
 
 ## Notes
 
@@ -104,7 +114,7 @@ nginx/nginx.conf
 
 This file "includes" configs from adjacent files, `nginx/myapp.conf` and `nginx/default-site.conf`. A default site for nginx has been included to help determine that nginx is running correctly, located at `http://127.0.0.1:8079/`.
 
-In order to communicate between nginx and Gunicorn, we are using a Unix socket, created at `${PWD}/django.sock`. This allows communication between processes on the same system; in Gunicorn and nginx were running on different computers, we would use a network address here instead. 
+In order to communicate between nginx and Gunicorn, we are using a Unix socket, created at `${PWD}/django.sock`. This allows communication between processes on the same system; in Gunicorn and nginx were running on different computers, we would use a network address here instead.
 
 ## Resources
 
@@ -124,9 +134,9 @@ In order to communicate between nginx and Gunicorn, we are using a Unix socket, 
 
 # conda
 
-conda is a package manager, which allows for the scripted installation of version-controlled software and libraries. conda allows us to install all the software needed for this demo without requiring admin-rights to the computer or server. 
+conda is a package manager, which allows for the scripted installation of version-controlled software and libraries. conda allows us to install all the software needed for this demo without requiring admin-rights to the computer or server.
 
-conda was originally developed for Python library management but has expanded to include a wide range of software. 
+conda was originally developed for Python library management but has expanded to include a wide range of software.
 
 conda is often downloaded via the Anaconda and Miniconda distributions. Anaconda is a package that includes conda + a large number of optional Python libraries, whereas Miniconda is a bare-bones installation of conda + essential Python libraries. Miniconda is used in this demonstration. Both Anaconda and Miniconda come in '2' and '3' variants, which correspond to the base versions of Python they include (Python 2 and Python 3, respectively).
 
@@ -150,4 +160,4 @@ Software used in this demonstration:
 
 - conda (Miniconda 3) 4.5.4
 
-This demonstration was designed on macOS 10.12.6 Sierra, and should work on most macOS and Linux operating systems. 
+This demonstration was designed on macOS 10.12.6 Sierra, and should work on most macOS and Linux operating systems.
