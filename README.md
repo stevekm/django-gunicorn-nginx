@@ -152,7 +152,9 @@ conda is often downloaded via the Anaconda and Miniconda distributions. Anaconda
 
 # make
 
-This demonstration uses a Makefile to wrap up all the commands to be run (see the file `Makefile`). Makefiles consist of "targets" and "recipes", where the recipe is a list of commands used to create the target item. Targets can have dependencies on other targets, and Makefiles can include variables that can be exported into the shell environment of the commands run in  recipes. In this case, the targets are easy names to describe the actions we are taking. You can read the Makefile to see the full list of commands being used throughout the demo. 
+This demonstration uses a Makefile to wrap up all the commands to be run (see the file `Makefile`). Makefiles consist of "targets" and "recipes", where the recipe is a list of commands used to create the target item. Targets can have dependencies on other targets, and Makefiles can include variables that can be exported into the shell environment of the commands run in  recipes. In this case, the targets are easy names to describe the actions we are taking. You can read the Makefile to see the full list of commands being used throughout the demo.
+
+Importantly, the Makefile also configures the environment so that the software installed with conda in this directory is used to run all commands. Thus, you should use Makefile recipes to run all commands to interact with the programs used in this repo. 
 
 # Software
 
