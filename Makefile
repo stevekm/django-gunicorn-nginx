@@ -2,7 +2,7 @@ SHELL:=/bin/bash
 UNAME:=$(shell uname)
 export LOG_DIR:=logs
 
-install: conda-install django
+install: conda-install django $(NEW_CONF)
 
 start: gunicorn-start
 	sleep 1
