@@ -118,7 +118,7 @@ nginx/nginx.conf
 
 This file "includes" configs from adjacent files, `nginx/myapp.conf` and `nginx/default-site.conf`. A default site for nginx has been included to help determine that nginx is running correctly, located at `http://127.0.0.1:8079/`.
 
-In order to communicate between nginx and Gunicorn, we are using a Unix socket, created at `${PWD}/django.sock`. This allows communication between processes on the same system; in Gunicorn and nginx were running on different computers, we would use a network address here instead.
+In order to communicate between nginx and Gunicorn, we are using a Unix socket, created at `${PWD}/django.sock`. This allows communication between processes on the same system; if Gunicorn and nginx were running on different computers, we would use a network address here instead.
 
 ## Resources
 
